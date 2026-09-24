@@ -1,0 +1,237 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>情緒可控語音合成 — 試聽頁</title>
+<style>
+:root{--bg:#fbfaf8;--fg:#1a1a1a;--mut:#666;--line:#e3e0da;--accent:#7a4b2a}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.65 -apple-system,"Segoe UI","Noto Sans TC",sans-serif;background:var(--bg);color:var(--fg)}
+.wrap{max-width:60rem;margin:0 auto;padding:2.5rem 1rem 4rem}
+h1{font-size:1.7rem;margin:0 0 .4rem}
+.sub{color:var(--mut);margin:0 0 2rem}
+h2{font-size:1.15rem;margin:2.6rem 0 .4rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+.lead{margin:.3rem 0 .6rem}
+.listen{background:#f2ede6;border-left:3px solid var(--accent);padding:.55rem .8rem;margin:.6rem 0 1rem;font-size:.93rem}
+table{width:100%;border-collapse:collapse;margin:.5rem 0 1rem}
+th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{background:#f4f1ec;font-weight:600;font-size:.9rem}
+td.rowlab{white-space:nowrap;font-weight:600;background:#faf8f5}
+audio{width:100%;min-width:11rem;margin:.1rem 0}
+.note{color:var(--mut);font-size:.85rem;margin-top:.25rem}
+.txt{font-size:.9rem;color:#333;margin-bottom:.3rem}
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--mut);font-size:.87rem}
+@media(max-width:640px){table,thead,tbody,tr,td,th{display:block}th{display:none}
+ td{border:none;border-bottom:1px solid var(--line)}td.rowlab{border:none;padding-bottom:0}}
+</style></head><body><div class="wrap">
+<h1>情緒可控語音合成：試聽頁</h1>
+<p class="sub">以 CosyVoice 2 為基礎模型，於語言模型輸入端加入情緒類別與連續情緒維度（激發度、支配度、愉悅度）條件，並以條件丟棄與無分類器引導放大條件訊號。以下所有音檔皆為本研究模型的合成輸出。</p>
+<nav class="sub"><a href="#emotions">七類情緒</a> · <a href="#intensity">強度旋鈕：引導係數 w</a> · <a href="#cer">資料擴充前後的中文可懂度</a> · <a href="#support">控制範圍的但書：資料範圍內與分佈外</a> · <a href="#steering">未微調模型上的表徵方向注入</a></nav>
+<h2 id="emotions">七類情緒</h2>
+<p class="lead">最終模型、同一句文本、同一個語者提示，僅更換情緒條件。恐懼與厭惡兩類的訓練資料由本研究自行建構。</p>
+<p class="listen"><strong>聽什麼：</strong>聽情緒是否可辨識。引導係數固定為 1。</p>
+<table><thead><tr><th>條件</th><th>文本</th><th>音檔</th></tr></thead><tbody>
+<tr><td class="rowlab">中性</td>
+<td class="txt">他把书放回书架的第二层。</td><td>
+<audio controls preload="none" src="audio/emotions_00.mp3"></audio>
+</td></tr>
+<tr><td class="rowlab">快樂</td>
+<td class="txt">他把书放回书架的第二层。</td><td>
+<audio controls preload="none" src="audio/emotions_01.mp3"></audio>
+</td></tr>
+<tr><td class="rowlab">悲傷</td>
+<td class="txt">他把书放回书架的第二层。</td><td>
+<audio controls preload="none" src="audio/emotions_02.mp3"></audio>
+</td></tr>
+<tr><td class="rowlab">憤怒</td>
+<td class="txt">他把书放回书架的第二层。</td><td>
+<audio controls preload="none" src="audio/emotions_03.mp3"></audio>
+</td></tr>
+<tr><td class="rowlab">驚訝</td>
+<td class="txt">他把书放回书架的第二层。</td><td>
+<audio controls preload="none" src="audio/emotions_04.mp3"></audio>
+</td></tr>
+<tr><td class="rowlab">恐懼</td>
+<td class="txt">他把书放回书架的第二层。</td><td>
+<audio controls preload="none" src="audio/emotions_05.mp3"></audio>
+</td></tr>
+<tr><td class="rowlab">厭惡</td>
+<td class="txt">他把书放回书架的第二层。</td><td>
+<audio controls preload="none" src="audio/emotions_06.mp3"></audio>
+</td></tr>
+</tbody></table>
+<h2 id="intensity">強度旋鈕：引導係數 w</h2>
+<p class="lead">同一情緒、同一句文本，僅改變推論時的引導係數 w。w=0 為不使用引導的一般條件式生成。</p>
+<p class="listen"><strong>聽什麼：</strong>由左至右聽音高、音量與語速的變化；恐懼與厭惡在 w=2 時語速明顯加快。</p>
+<table><thead><tr><th></th><th>w = 0</th><th>w = 1</th><th>w = 2</th></tr></thead><tbody>
+<tr><td class="rowlab">憤怒</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_00.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_01.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_02.mp3"></audio>
+</td>
+</tr>
+<tr><td class="rowlab">快樂</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_03.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_04.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_05.mp3"></audio>
+</td>
+</tr>
+<tr><td class="rowlab">悲傷</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_06.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_07.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_08.mp3"></audio>
+</td>
+</tr>
+<tr><td class="rowlab">恐懼</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_09.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_10.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_11.mp3"></audio>
+</td>
+</tr>
+<tr><td class="rowlab">厭惡</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_12.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_13.mp3"></audio>
+</td>
+<td>
+<div class="txt">他把书放回书架的第二层。</div>
+<audio controls preload="none" src="audio/intensity_14.mp3"></audio>
+</td>
+</tr>
+</tbody></table>
+<h2 id="cer">資料擴充前後的中文可懂度</h2>
+<p class="lead">擴充前的模型在中文上有明顯的遺忘現象，約四分之一的句子被合成為與文本無關的內容；擴充後幾乎消失。每格附上以 Whisper large-v2 轉寫所得的字元錯誤率與辨識結果。</p>
+<p class="listen"><strong>聽什麼：</strong>聽左欄是否念出了字幕所寫的句子。</p>
+<table><thead><tr><th></th><th>擴充前（階段二）</th><th>擴充後（最終模型）</th></tr></thead><tbody>
+<tr><td class="rowlab">憤怒</td>
+<td>
+<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<audio controls preload="none" src="audio/cer_00.mp3"></audio>
+<div class="note">CER 1.08；辨識為「哎呀有何的事别哀我有裤子要挥」</div>
+</td>
+<td>
+<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<audio controls preload="none" src="audio/cer_01.mp3"></audio>
+<div class="note">CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」</div>
+</td>
+</tr>
+<tr><td class="rowlab">快樂</td>
+<td>
+<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<audio controls preload="none" src="audio/cer_02.mp3"></audio>
+<div class="note">CER 1.54；辨識為「我的妈妈也是看到头七的缺素头七的头七头七的」</div>
+</td>
+<td>
+<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<audio controls preload="none" src="audio/cer_03.mp3"></audio>
+<div class="note">CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」</div>
+</td>
+</tr>
+<tr><td class="rowlab">中性</td>
+<td>
+<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<audio controls preload="none" src="audio/cer_04.mp3"></audio>
+<div class="note">CER 1.31；辨識為「我一直在处理一直在撤家里后的yes」</div>
+</td>
+<td>
+<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<audio controls preload="none" src="audio/cer_05.mp3"></audio>
+<div class="note">CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」</div>
+</td>
+</tr>
+</tbody></table>
+<h2 id="support">控制範圍的但書：資料範圍內與分佈外</h2>
+<p class="lead">同一模型、同一情緒（憤怒），僅改變所指定的激發度。最左者為訓練資料幾乎未出現的極端設定。</p>
+<p class="listen"><strong>聽什麼：</strong>最左與其他兩者的差異明顯，但那是模型在分佈外的外插行為；資料範圍內（中、右）的差異小得多，這正是客觀數值與聽感之間落差的來源。</p>
+<table><thead><tr><th>條件</th><th>文本</th><th>音檔</th></tr></thead><tbody>
+<tr><td class="rowlab">設定 1.6（分佈外）</td>
+<td class="txt">The weather report says it will rain later this afternoon.</td><td>
+<audio controls preload="none" src="audio/support_00.mp3"></audio>
+<div class="note">情緒辨識模型預測激發度 0.444</div>
+</td></tr>
+<tr><td class="rowlab">設定 4.0（資料範圍內，低）</td>
+<td class="txt">The weather report says it will rain later this afternoon.</td><td>
+<audio controls preload="none" src="audio/support_01.mp3"></audio>
+<div class="note">情緒辨識模型預測激發度 0.453</div>
+</td></tr>
+<tr><td class="rowlab">設定 5.8（資料範圍內，高）</td>
+<td class="txt">The weather report says it will rain later this afternoon.</td><td>
+<audio controls preload="none" src="audio/support_02.mp3"></audio>
+<div class="note">情緒辨識模型預測激發度 0.598</div>
+</td></tr>
+</tbody></table>
+<h2 id="steering">未微調模型上的表徵方向注入</h2>
+<p class="lead">不更新任何權重，於語言模型第 16 層的連續表徵加上一個激發度方向，強度為 α。此為第五章分析所用的聽測刺激。</p>
+<p class="listen"><strong>聽什麼：</strong>由左至右聽強度是否單調上升，以及語音是否仍然清楚。</p>
+<table><thead><tr><th></th><th>α 最低</th><th>α = 0（原始）</th><th>α 最高</th></tr></thead><tbody>
+<tr><td class="rowlab">英文</td>
+<td>
+<div class="txt">The library added several new titles to its shelves.</div>
+<audio controls preload="none" src="audio/steering_00.mp3"></audio>
+<div class="note">注入強度 α = -2；預測激發度 0.397</div>
+</td>
+<td>
+<div class="txt">The library added several new titles to its shelves.</div>
+<audio controls preload="none" src="audio/steering_01.mp3"></audio>
+<div class="note">注入強度 α = +0；預測激發度 0.459</div>
+</td>
+<td>
+<div class="txt">The library added several new titles to its shelves.</div>
+<audio controls preload="none" src="audio/steering_02.mp3"></audio>
+<div class="note">注入強度 α = +2；預測激發度 0.490</div>
+</td>
+</tr>
+<tr><td class="rowlab">中文</td>
+<td>
+<div class="txt">今天的天气有点潮湿但还算温暖</div>
+<audio controls preload="none" src="audio/steering_03.mp3"></audio>
+<div class="note">注入強度 α = -3；預測激發度 0.218</div>
+</td>
+<td>
+<div class="txt">今天的天气有点潮湿但还算温暖</div>
+<audio controls preload="none" src="audio/steering_04.mp3"></audio>
+<div class="note">注入強度 α = +0；預測激發度 0.450</div>
+</td>
+<td>
+<div class="txt">今天的天气有点潮湿但还算温暖</div>
+<audio controls preload="none" src="audio/steering_05.mp3"></audio>
+<div class="note">注入強度 α = +3；預測激發度 0.579</div>
+</td>
+</tr>
+</tbody></table>
+<footer>音檔為模型合成輸出，取樣率 24 kHz，轉為 96 kbps mp3。訓練所用語料（MSP-Podcast、ESD、Emo-Emilia）之原始錄音不包含於本頁。每個音檔對應的實驗與原始路徑見 <a href="manifest.csv">manifest.csv</a>。</footer>
+</div></body></html>
