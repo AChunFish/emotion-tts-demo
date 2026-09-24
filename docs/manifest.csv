@@ -21,15 +21,12 @@ intensity,audio/intensity_11.mp3,eval_iter4_cfg/cfg2_fear/wavs/text0_fear_anan.w
 intensity,audio/intensity_12.mp3,eval_iter4_cfg/cfg0_disgust/wavs/text0_disgust_anan.wav,他把书放回书架的第二层。,
 intensity,audio/intensity_13.mp3,eval_iter4_cfg/cfg1_disgust/wavs/text0_disgust_anan.wav,他把书放回书架的第二层。,
 intensity,audio/intensity_14.mp3,eval_iter4_cfg/cfg2_disgust/wavs/text0_disgust_anan.wav,他把书放回书架的第二层。,
-cer,audio/cer_00.mp3,eval_zh_sweep/zh_iter2_e29_cfg1/wavs/text1_angry_a0.4.wav,昨天晚上下了好大的雨还打雷。,CER 1.08；辨識為「哎呀有何的事别哀我有裤子要挥」
-cer,audio/cer_01.mp3,eval_zh_sweep/zh_iter4_e37_cfg1/wavs/text1_angry_a0.4.wav,昨天晚上下了好大的雨还打雷。,CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」
-cer,audio/cer_02.mp3,eval_zh_sweep/zh_iter2_e29_cfg1/wavs/text1_happy_a0.8.wav,昨天晚上下了好大的雨还打雷。,CER 1.54；辨識為「我的妈妈也是看到头七的缺素头七的头七头七的」
-cer,audio/cer_03.mp3,eval_zh_sweep/zh_iter4_e37_cfg1/wavs/text1_happy_a0.8.wav,昨天晚上下了好大的雨还打雷。,CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」
-cer,audio/cer_04.mp3,eval_zh_sweep/zh_iter2_e29_cfg1/wavs/text1_neutral_a0.1.wav,昨天晚上下了好大的雨还打雷。,CER 1.31；辨識為「我一直在处理一直在撤家里后的yes」
-cer,audio/cer_05.mp3,eval_zh_sweep/zh_iter4_e37_cfg1/wavs/text1_neutral_a0.1.wav,昨天晚上下了好大的雨还打雷。,CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」
-support,audio/support_00.mp3,eval_step0_adv_sweep/iter4_e37_cfg1/wavs/text0_angry_a0.1.wav,The weather report says it will rain later this afternoon.,情緒辨識模型預測激發度 0.444
-support,audio/support_01.mp3,eval_step0_adv_sweep/iter4_e37_cfg1/wavs/text0_angry_a0.5.wav,The weather report says it will rain later this afternoon.,情緒辨識模型預測激發度 0.453
-support,audio/support_02.mp3,eval_step0_adv_sweep/iter4_e37_cfg1/wavs/text0_angry_a0.8.wav,The weather report says it will rain later this afternoon.,情緒辨識模型預測激發度 0.598
+cer,audio/cer_00.mp3,eval_zh_sweep/zh_iter2_e29_cfg1/wavs/text1_angry_a0.4.wav,昨天晚上下了好大的雨还打雷。,字元錯誤率 1.08；辨識為「哎呀有何的事別哀我有褲子要揮」
+cer,audio/cer_01.mp3,eval_zh_sweep/zh_iter4_e37_cfg1/wavs/text1_angry_a0.4.wav,昨天晚上下了好大的雨还打雷。,字元錯誤率 0.00；辨識為「昨天晚上下了好大的雨還打雷」
+cer,audio/cer_02.mp3,eval_zh_sweep/zh_iter2_e29_cfg1/wavs/text1_happy_a0.8.wav,昨天晚上下了好大的雨还打雷。,字元錯誤率 1.54；辨識為「我的媽媽也是看到頭七的缺素頭七的頭七頭七的」
+cer,audio/cer_03.mp3,eval_zh_sweep/zh_iter4_e37_cfg1/wavs/text1_happy_a0.8.wav,昨天晚上下了好大的雨还打雷。,字元錯誤率 0.00；辨識為「昨天晚上下了好大的雨還打雷」
+cer,audio/cer_04.mp3,eval_zh_sweep/zh_iter2_e29_cfg1/wavs/text1_neutral_a0.1.wav,昨天晚上下了好大的雨还打雷。,字元錯誤率 1.31；辨識為「我一直在處理一直在撤家裡後的yes」
+cer,audio/cer_05.mp3,eval_zh_sweep/zh_iter4_e37_cfg1/wavs/text1_neutral_a0.1.wav,昨天晚上下了好大的雨还打雷。,字元錯誤率 0.00；辨識為「昨天晚上下了好大的雨還打雷」
 steering,audio/steering_00.mp3,listening_test_blockA/wavs/s001.wav,The library added several new titles to its shelves.,注入強度 α = -2；預測激發度 0.397
 steering,audio/steering_01.mp3,listening_test_blockA/wavs/s002.wav,The library added several new titles to its shelves.,注入強度 α = +0；預測激發度 0.459
 steering,audio/steering_02.mp3,listening_test_blockA/wavs/s004.wav,The library added several new titles to its shelves.,注入強度 α = +2；預測激發度 0.490
