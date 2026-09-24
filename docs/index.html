@@ -1,237 +1,306 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>情緒可控語音合成 — 試聽頁</title>
+<meta name="description" content="CosyVoice 2 之情緒類別與連續情緒強度控制：合成語音試聽。">
 <style>
-:root{--bg:#fbfaf8;--fg:#1a1a1a;--mut:#666;--line:#e3e0da;--accent:#7a4b2a}
+:root{
+  --bg:#f7f5f1; --panel:#fffefc; --fg:#17150f; --mut:#6b6558; --faint:#8d8779;
+  --line:#e6e1d7; --line2:#efebe3; --accent:#8a4b2a; --accent-soft:#f0e6dd;
+  --chip:#efece5; --radius:14px;
+  --shadow:0 1px 2px rgba(23,21,15,.04), 0 6px 20px -12px rgba(23,21,15,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14130f; --panel:#1c1a16; --fg:#efece4; --mut:#a7a094; --faint:#8b857a;
+    --line:#2c2924; --line2:#252219; --accent:#d99a6c; --accent-soft:#2a2118;
+    --chip:#262319;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+  }
+}
 *{box-sizing:border-box}
-body{margin:0;font:15px/1.65 -apple-system,"Segoe UI","Noto Sans TC",sans-serif;background:var(--bg);color:var(--fg)}
-.wrap{max-width:60rem;margin:0 auto;padding:2.5rem 1rem 4rem}
-h1{font-size:1.7rem;margin:0 0 .4rem}
-.sub{color:var(--mut);margin:0 0 2rem}
-h2{font-size:1.15rem;margin:2.6rem 0 .4rem;padding-top:1.4rem;border-top:1px solid var(--line)}
-.lead{margin:.3rem 0 .6rem}
-.listen{background:#f2ede6;border-left:3px solid var(--accent);padding:.55rem .8rem;margin:.6rem 0 1rem;font-size:.93rem}
-table{width:100%;border-collapse:collapse;margin:.5rem 0 1rem}
-th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
-th{background:#f4f1ec;font-weight:600;font-size:.9rem}
-td.rowlab{white-space:nowrap;font-weight:600;background:#faf8f5}
-audio{width:100%;min-width:11rem;margin:.1rem 0}
-.note{color:var(--mut);font-size:.85rem;margin-top:.25rem}
-.txt{font-size:.9rem;color:#333;margin-bottom:.3rem}
-footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line);color:var(--mut);font-size:.87rem}
-@media(max-width:640px){table,thead,tbody,tr,td,th{display:block}th{display:none}
- td{border:none;border-bottom:1px solid var(--line)}td.rowlab{border:none;padding-bottom:0}}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  font-feature-settings:"palt" 1}
+.wrap{max-width:62rem;margin:0 auto;padding:0 1.25rem 5rem}
+
+/* ---- header ---- */
+header{padding:4rem 0 2rem;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 .9rem;font-weight:600}
+h1{font-size:clamp(1.7rem,4.2vw,2.45rem);line-height:1.25;margin:0 0 .8rem;
+  font-family:"Noto Serif TC",Georgia,"Songti TC",serif;font-weight:600;letter-spacing:-.01em}
+.lede{margin:0;max-width:44rem;color:var(--mut);font-size:1.02rem}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem;margin:1.5rem 0 0;padding:0;list-style:none}
+.meta li{font-size:.8rem;color:var(--mut);background:var(--chip);border-radius:999px;padding:.25rem .7rem}
+
+/* ---- sticky nav ---- */
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-bottom:2.5rem}
+nav ol{display:flex;gap:.2rem;overflow-x:auto;margin:0;padding:.55rem 0;list-style:none;scrollbar-width:none}
+nav ol::-webkit-scrollbar{display:none}
+nav a{flex:0 0 auto;font-size:.86rem;color:var(--mut);text-decoration:none;padding:.35rem .7rem;border-radius:999px;white-space:nowrap}
+nav a:hover{color:var(--fg);background:var(--chip)}
+
+/* ---- sections ---- */
+section{margin:0 0 4rem;scroll-margin-top:4rem}
+.sec-head{display:flex;gap:.9rem;align-items:baseline;margin-bottom:.5rem}
+.num{flex:0 0 auto;font-size:.8rem;font-weight:700;color:var(--accent);background:var(--accent-soft);
+  border-radius:999px;min-width:1.7rem;height:1.7rem;display:grid;place-items:center}
+h2{font-size:1.3rem;margin:0;font-family:"Noto Serif TC",Georgia,serif;font-weight:600;letter-spacing:-.005em}
+.lead{margin:.2rem 0 1rem;color:var(--mut);max-width:48rem}
+.listen{display:flex;gap:.6rem;background:var(--panel);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:8px;padding:.7rem .9rem;margin:0 0 1.2rem;font-size:.94rem}
+.listen b{color:var(--accent);flex:0 0 auto;font-weight:600}
+.shared-text{background:var(--chip);border-radius:8px;padding:.55rem .85rem;margin:0 0 1rem;font-size:.95rem}
+.shared-text b{color:var(--faint);font-weight:600;font-size:.8rem;letter-spacing:.06em;margin-right:.6rem}
+.stats{display:flex;flex-wrap:wrap;gap:.45rem;margin:0 0 1.2rem;padding:0;list-style:none}
+.stats li{font-size:.82rem;color:var(--fg);background:var(--chip);border-radius:6px;padding:.3rem .65rem}
+.stats li span{color:var(--mut)}
+
+/* ---- clip grid ---- */
+.grid{display:grid;gap:.9rem}
+.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rowlab{grid-column:1/-1;font-size:.84rem;color:var(--faint);font-weight:600;margin:.9rem 0 -.2rem;
+  display:flex;flex-wrap:wrap;gap:.6rem;align-items:baseline}
+.rowlab span{font-weight:400;color:var(--mut);font-size:.88rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.95rem 1rem 1rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.55rem}
+.card .cond{font-size:.86rem;font-weight:600}
+.card .txt{font-size:.9rem;color:var(--mut);margin:0}
+.card audio{width:100%;height:36px;margin-top:auto}
+.card .note{font-size:.82rem;color:var(--faint);margin:0}
+.card .note.bad{color:#b4462f}
+@media (prefers-color-scheme:dark){.card .note.bad{color:#e08a72}}
+@media(max-width:720px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding-top:1.5rem;color:var(--faint);font-size:.87rem}
+footer a{color:var(--accent)}
+a:focus-visible,audio:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </style></head><body><div class="wrap">
-<h1>情緒可控語音合成：試聽頁</h1>
-<p class="sub">以 CosyVoice 2 為基礎模型，於語言模型輸入端加入情緒類別與連續情緒維度（激發度、支配度、愉悅度）條件，並以條件丟棄與無分類器引導放大條件訊號。以下所有音檔皆為本研究模型的合成輸出。</p>
-<nav class="sub"><a href="#emotions">七類情緒</a> · <a href="#intensity">強度旋鈕：引導係數 w</a> · <a href="#cer">資料擴充前後的中文可懂度</a> · <a href="#support">控制範圍的但書：資料範圍內與分佈外</a> · <a href="#steering">未微調模型上的表徵方向注入</a></nav>
-<h2 id="emotions">七類情緒</h2>
-<p class="lead">最終模型、同一句文本、同一個語者提示，僅更換情緒條件。恐懼與厭惡兩類的訓練資料由本研究自行建構。</p>
-<p class="listen"><strong>聽什麼：</strong>聽情緒是否可辨識。引導係數固定為 1。</p>
-<table><thead><tr><th>條件</th><th>文本</th><th>音檔</th></tr></thead><tbody>
-<tr><td class="rowlab">中性</td>
-<td class="txt">他把书放回书架的第二层。</td><td>
+<header>
+<p class="eyebrow">碩士論文 · 試聽頁</p>
+<h1>情緒可控的語音合成：<br>類別、強度，與控制的邊界</h1>
+<p class="lede">以 CosyVoice 2 為基礎模型，於語言模型輸入端加入情緒類別與連續情緒維度（激發度、支配度、愉悅度）條件，並以條件丟棄與無分類器引導放大條件訊號。以下音檔全部為本研究模型的合成輸出。</p>
+<ul class="meta"><li>七類情緒</li><li>強度以引導係數 w 調整</li><li>中文與英文</li><li>24 kHz · mp3</li></ul>
+</header>
+<nav><ol><li><a href="#emotions">七類情緒</a></li><li><a href="#intensity">強度旋鈕</a></li><li><a href="#cer">中文可懂度</a></li><li><a href="#support">控制範圍的但書</a></li><li><a href="#steering">表徵方向注入</a></li></ol></nav>
+<section id="emotions">
+<div class="sec-head"><span class="num">1</span><h2>七類情緒</h2></div>
+<p class="lead">最終模型、同一句文本、同一個語者提示，僅更換情緒條件。恐懼與厭惡兩類在既有語料中極為稀缺，其訓練資料由本研究以真實語音的韻律為來源自行建構。</p>
+<p class="listen"><b>聽什麼</b><span>情緒是否可辨識。引導係數固定為 w = 1。</span></p>
+<p class="shared-text"><b>文本</b>他把書放回書架的第二層。</p>
+<ul class="stats"><li><span>可控情緒</span> 5 類 → 7 類</li><li><span>平均意見分數</span> 3.961 → 4.102</li><li><span>中文字元錯誤率</span> 0.007</li></ul>
+<div class="grid cols-3">
+<div class="card">
+<span class="cond">中性</span>
 <audio controls preload="none" src="audio/emotions_00.mp3"></audio>
-</td></tr>
-<tr><td class="rowlab">快樂</td>
-<td class="txt">他把书放回书架的第二层。</td><td>
+</div>
+<div class="card">
+<span class="cond">快樂</span>
 <audio controls preload="none" src="audio/emotions_01.mp3"></audio>
-</td></tr>
-<tr><td class="rowlab">悲傷</td>
-<td class="txt">他把书放回书架的第二层。</td><td>
+</div>
+<div class="card">
+<span class="cond">悲傷</span>
 <audio controls preload="none" src="audio/emotions_02.mp3"></audio>
-</td></tr>
-<tr><td class="rowlab">憤怒</td>
-<td class="txt">他把书放回书架的第二层。</td><td>
+</div>
+<div class="card">
+<span class="cond">憤怒</span>
 <audio controls preload="none" src="audio/emotions_03.mp3"></audio>
-</td></tr>
-<tr><td class="rowlab">驚訝</td>
-<td class="txt">他把书放回书架的第二层。</td><td>
+</div>
+<div class="card">
+<span class="cond">驚訝</span>
 <audio controls preload="none" src="audio/emotions_04.mp3"></audio>
-</td></tr>
-<tr><td class="rowlab">恐懼</td>
-<td class="txt">他把书放回书架的第二层。</td><td>
+</div>
+<div class="card">
+<span class="cond">恐懼</span>
 <audio controls preload="none" src="audio/emotions_05.mp3"></audio>
-</td></tr>
-<tr><td class="rowlab">厭惡</td>
-<td class="txt">他把书放回书架的第二层。</td><td>
+</div>
+<div class="card">
+<span class="cond">厭惡</span>
 <audio controls preload="none" src="audio/emotions_06.mp3"></audio>
-</td></tr>
-</tbody></table>
-<h2 id="intensity">強度旋鈕：引導係數 w</h2>
-<p class="lead">同一情緒、同一句文本，僅改變推論時的引導係數 w。w=0 為不使用引導的一般條件式生成。</p>
-<p class="listen"><strong>聽什麼：</strong>由左至右聽音高、音量與語速的變化；恐懼與厭惡在 w=2 時語速明顯加快。</p>
-<table><thead><tr><th></th><th>w = 0</th><th>w = 1</th><th>w = 2</th></tr></thead><tbody>
-<tr><td class="rowlab">憤怒</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+</div>
+</section>
+<section id="intensity">
+<div class="sec-head"><span class="num">2</span><h2>強度旋鈕：引導係數 w</h2></div>
+<p class="lead">同一情緒、同一句文本，僅改變推論時的引導係數 w。w=0 為不使用引導的一般條件式生成；w 越大，情緒條件與空條件之間的差異方向被放大得越多。</p>
+<p class="listen"><b>聽什麼</b><span>由左至右聽音高、音量與語速的變化。恐懼與厭惡在 w=2 時語速明顯加快。</span></p>
+<p class="shared-text"><b>文本</b>他把書放回書架的第二層。</p>
+<ul class="stats"><li><span>等級相關 ρ</span> 0.671 → 0.794（w=0 → 1）</li><li><span>動態範圍 DR</span> 0.098 → 0.152</li><li><span>建議預設值</span> w ≈ 1</li></ul>
+<div class="grid cols-3">
+<p class="rowlab">憤怒</p>
+<div class="card">
+<span class="cond">w = 0</span>
 <audio controls preload="none" src="audio/intensity_00.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 1</span>
 <audio controls preload="none" src="audio/intensity_01.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 2</span>
 <audio controls preload="none" src="audio/intensity_02.mp3"></audio>
-</td>
-</tr>
-<tr><td class="rowlab">快樂</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<p class="rowlab">快樂</p>
+<div class="card">
+<span class="cond">w = 0</span>
 <audio controls preload="none" src="audio/intensity_03.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 1</span>
 <audio controls preload="none" src="audio/intensity_04.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 2</span>
 <audio controls preload="none" src="audio/intensity_05.mp3"></audio>
-</td>
-</tr>
-<tr><td class="rowlab">悲傷</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<p class="rowlab">悲傷</p>
+<div class="card">
+<span class="cond">w = 0</span>
 <audio controls preload="none" src="audio/intensity_06.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 1</span>
 <audio controls preload="none" src="audio/intensity_07.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 2</span>
 <audio controls preload="none" src="audio/intensity_08.mp3"></audio>
-</td>
-</tr>
-<tr><td class="rowlab">恐懼</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<p class="rowlab">恐懼</p>
+<div class="card">
+<span class="cond">w = 0</span>
 <audio controls preload="none" src="audio/intensity_09.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 1</span>
 <audio controls preload="none" src="audio/intensity_10.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 2</span>
 <audio controls preload="none" src="audio/intensity_11.mp3"></audio>
-</td>
-</tr>
-<tr><td class="rowlab">厭惡</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<p class="rowlab">厭惡</p>
+<div class="card">
+<span class="cond">w = 0</span>
 <audio controls preload="none" src="audio/intensity_12.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 1</span>
 <audio controls preload="none" src="audio/intensity_13.mp3"></audio>
-</td>
-<td>
-<div class="txt">他把书放回书架的第二层。</div>
+</div>
+<div class="card">
+<span class="cond">w = 2</span>
 <audio controls preload="none" src="audio/intensity_14.mp3"></audio>
-</td>
-</tr>
-</tbody></table>
-<h2 id="cer">資料擴充前後的中文可懂度</h2>
+</div>
+</div>
+</section>
+<section id="cer">
+<div class="sec-head"><span class="num">3</span><h2>資料擴充前後的中文可懂度</h2></div>
 <p class="lead">擴充前的模型在中文上有明顯的遺忘現象，約四分之一的句子被合成為與文本無關的內容；擴充後幾乎消失。每格附上以 Whisper large-v2 轉寫所得的字元錯誤率與辨識結果。</p>
-<p class="listen"><strong>聽什麼：</strong>聽左欄是否念出了字幕所寫的句子。</p>
-<table><thead><tr><th></th><th>擴充前（階段二）</th><th>擴充後（最終模型）</th></tr></thead><tbody>
-<tr><td class="rowlab">憤怒</td>
-<td>
-<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<p class="listen"><b>聽什麼</b><span>左欄是否念出了字幕所寫的句子。右欄為同一句、同一設定，僅模型不同。</span></p>
+<p class="shared-text"><b>文本</b>昨天晚上下了好大的雨還打雷。</p>
+<ul class="stats"><li><span>平均字元錯誤率</span> 0.32–0.39 → ≤ 0.03</li><li><span>崩壞句數</span> 31–39 / 135 → 0–1 / 135</li></ul>
+<div class="grid cols-2">
+<p class="rowlab">憤怒</p>
+<div class="card">
+<span class="cond">擴充前（階段二）</span>
 <audio controls preload="none" src="audio/cer_00.mp3"></audio>
-<div class="note">CER 1.08；辨識為「哎呀有何的事别哀我有裤子要挥」</div>
-</td>
-<td>
-<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<p class="note bad">CER 1.08；辨識為「哎呀有何的事別哀我有褲子要揮」</p>
+</div>
+<div class="card">
+<span class="cond">擴充後（最終模型）</span>
 <audio controls preload="none" src="audio/cer_01.mp3"></audio>
-<div class="note">CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」</div>
-</td>
-</tr>
-<tr><td class="rowlab">快樂</td>
-<td>
-<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<p class="note">CER 0.00；辨識為「昨天晚上下了好大的雨還打雷」</p>
+</div>
+<p class="rowlab">快樂</p>
+<div class="card">
+<span class="cond">擴充前（階段二）</span>
 <audio controls preload="none" src="audio/cer_02.mp3"></audio>
-<div class="note">CER 1.54；辨識為「我的妈妈也是看到头七的缺素头七的头七头七的」</div>
-</td>
-<td>
-<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<p class="note bad">CER 1.54；辨識為「我的媽媽也是看到頭七的缺素頭七的頭七頭七的」</p>
+</div>
+<div class="card">
+<span class="cond">擴充後（最終模型）</span>
 <audio controls preload="none" src="audio/cer_03.mp3"></audio>
-<div class="note">CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」</div>
-</td>
-</tr>
-<tr><td class="rowlab">中性</td>
-<td>
-<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<p class="note">CER 0.00；辨識為「昨天晚上下了好大的雨還打雷」</p>
+</div>
+<p class="rowlab">中性</p>
+<div class="card">
+<span class="cond">擴充前（階段二）</span>
 <audio controls preload="none" src="audio/cer_04.mp3"></audio>
-<div class="note">CER 1.31；辨識為「我一直在处理一直在撤家里后的yes」</div>
-</td>
-<td>
-<div class="txt">昨天晚上下了好大的雨还打雷。</div>
+<p class="note bad">CER 1.31；辨識為「我一直在處理一直在撤家裡後的yes」</p>
+</div>
+<div class="card">
+<span class="cond">擴充後（最終模型）</span>
 <audio controls preload="none" src="audio/cer_05.mp3"></audio>
-<div class="note">CER 0.00；辨識為「昨天晚上下了好大的雨还打雷」</div>
-</td>
-</tr>
-</tbody></table>
-<h2 id="support">控制範圍的但書：資料範圍內與分佈外</h2>
-<p class="lead">同一模型、同一情緒（憤怒），僅改變所指定的激發度。最左者為訓練資料幾乎未出現的極端設定。</p>
-<p class="listen"><strong>聽什麼：</strong>最左與其他兩者的差異明顯，但那是模型在分佈外的外插行為；資料範圍內（中、右）的差異小得多，這正是客觀數值與聽感之間落差的來源。</p>
-<table><thead><tr><th>條件</th><th>文本</th><th>音檔</th></tr></thead><tbody>
-<tr><td class="rowlab">設定 1.6（分佈外）</td>
-<td class="txt">The weather report says it will rain later this afternoon.</td><td>
+<p class="note">CER 0.00；辨識為「昨天晚上下了好大的雨還打雷」</p>
+</div>
+</div>
+</section>
+<section id="support">
+<div class="sec-head"><span class="num">4</span><h2>控制範圍的但書：資料範圍內與分佈外</h2></div>
+<p class="lead">同一模型、同一情緒（憤怒）、同一句英文文本，僅改變所指定的激發度。第一格為訓練資料幾乎未出現的極端設定，其餘兩格落在訓練資料實際涵蓋的範圍內。</p>
+<p class="listen"><b>聽什麼</b><span>第一格與其餘兩格的差異明顯，但那是模型在分佈外的外插行為；資料範圍內（第二、三格）的差異小得多，這正是客觀數值與聽感之間落差的來源。</span></p>
+<p class="shared-text"><b>文本</b>The weather report says it will rain later this afternoon.</p>
+<ul class="stats"><li><span>完整掃描範圍 ρ</span> 0.794</li><li><span>僅資料範圍內 ρ</span> 0.613</li><li><span>動態範圍</span> 0.152 → 0.081</li></ul>
+<div class="grid cols-3">
+<div class="card">
+<span class="cond">設定 1.6（分佈外）</span>
 <audio controls preload="none" src="audio/support_00.mp3"></audio>
-<div class="note">情緒辨識模型預測激發度 0.444</div>
-</td></tr>
-<tr><td class="rowlab">設定 4.0（資料範圍內，低）</td>
-<td class="txt">The weather report says it will rain later this afternoon.</td><td>
+<p class="note">情緒辨識模型預測激發度 0.444</p>
+</div>
+<div class="card">
+<span class="cond">設定 4.0（資料範圍內，低）</span>
 <audio controls preload="none" src="audio/support_01.mp3"></audio>
-<div class="note">情緒辨識模型預測激發度 0.453</div>
-</td></tr>
-<tr><td class="rowlab">設定 5.8（資料範圍內，高）</td>
-<td class="txt">The weather report says it will rain later this afternoon.</td><td>
+<p class="note">情緒辨識模型預測激發度 0.453</p>
+</div>
+<div class="card">
+<span class="cond">設定 5.8（資料範圍內，高）</span>
 <audio controls preload="none" src="audio/support_02.mp3"></audio>
-<div class="note">情緒辨識模型預測激發度 0.598</div>
-</td></tr>
-</tbody></table>
-<h2 id="steering">未微調模型上的表徵方向注入</h2>
+<p class="note">情緒辨識模型預測激發度 0.598</p>
+</div>
+</div>
+</section>
+<section id="steering">
+<div class="sec-head"><span class="num">5</span><h2>未微調模型上的表徵方向注入</h2></div>
 <p class="lead">不更新任何權重，於語言模型第 16 層的連續表徵加上一個激發度方向，強度為 α。此為第五章分析所用的聽測刺激。</p>
-<p class="listen"><strong>聽什麼：</strong>由左至右聽強度是否單調上升，以及語音是否仍然清楚。</p>
-<table><thead><tr><th></th><th>α 最低</th><th>α = 0（原始）</th><th>α 最高</th></tr></thead><tbody>
-<tr><td class="rowlab">英文</td>
-<td>
-<div class="txt">The library added several new titles to its shelves.</div>
+<p class="listen"><b>聽什麼</b><span>由左至右強度是否單調上升，以及語音是否仍然清楚。</span></p>
+<ul class="stats"><li><span>等級相關 ρ</span> 0.702</li><li><span>詞錯誤率</span> ≈ 0</li><li><span>人耳排序 vs 客觀量測</span> 0.737（8 位受測者）</li></ul>
+<div class="grid cols-3">
+<p class="rowlab">英文<span>The library added several new titles to its shelves.</span></p>
+<div class="card">
+<span class="cond">α 最低</span>
 <audio controls preload="none" src="audio/steering_00.mp3"></audio>
-<div class="note">注入強度 α = -2；預測激發度 0.397</div>
-</td>
-<td>
-<div class="txt">The library added several new titles to its shelves.</div>
+<p class="note">注入強度 α = -2；預測激發度 0.397</p>
+</div>
+<div class="card">
+<span class="cond">α = 0（原始）</span>
 <audio controls preload="none" src="audio/steering_01.mp3"></audio>
-<div class="note">注入強度 α = +0；預測激發度 0.459</div>
-</td>
-<td>
-<div class="txt">The library added several new titles to its shelves.</div>
+<p class="note">注入強度 α = +0；預測激發度 0.459</p>
+</div>
+<div class="card">
+<span class="cond">α 最高</span>
 <audio controls preload="none" src="audio/steering_02.mp3"></audio>
-<div class="note">注入強度 α = +2；預測激發度 0.490</div>
-</td>
-</tr>
-<tr><td class="rowlab">中文</td>
-<td>
-<div class="txt">今天的天气有点潮湿但还算温暖</div>
+<p class="note">注入強度 α = +2；預測激發度 0.490</p>
+</div>
+<p class="rowlab">中文<span>今天的天氣有點潮溼但還算溫暖</span></p>
+<div class="card">
+<span class="cond">α 最低</span>
 <audio controls preload="none" src="audio/steering_03.mp3"></audio>
-<div class="note">注入強度 α = -3；預測激發度 0.218</div>
-</td>
-<td>
-<div class="txt">今天的天气有点潮湿但还算温暖</div>
+<p class="note">注入強度 α = -3；預測激發度 0.218</p>
+</div>
+<div class="card">
+<span class="cond">α = 0（原始）</span>
 <audio controls preload="none" src="audio/steering_04.mp3"></audio>
-<div class="note">注入強度 α = +0；預測激發度 0.450</div>
-</td>
-<td>
-<div class="txt">今天的天气有点潮湿但还算温暖</div>
+<p class="note">注入強度 α = +0；預測激發度 0.450</p>
+</div>
+<div class="card">
+<span class="cond">α 最高</span>
 <audio controls preload="none" src="audio/steering_05.mp3"></audio>
-<div class="note">注入強度 α = +3；預測激發度 0.579</div>
-</td>
-</tr>
-</tbody></table>
-<footer>音檔為模型合成輸出，取樣率 24 kHz，轉為 96 kbps mp3。訓練所用語料（MSP-Podcast、ESD、Emo-Emilia）之原始錄音不包含於本頁。每個音檔對應的實驗與原始路徑見 <a href="manifest.csv">manifest.csv</a>。</footer>
+<p class="note">注入強度 α = +3；預測激發度 0.579</p>
+</div>
+</div>
+</section>
+<footer><p>音檔為模型合成輸出，取樣率 24 kHz，轉為 96 kbps 單聲道 mp3。訓練所用語料（MSP-Podcast、ESD、Emo-Emilia）之原始錄音不包含於本頁。每段音檔對應的實驗設定與原始路徑見 <a href="manifest.csv">manifest.csv</a>。</p></footer>
 </div></body></html>
