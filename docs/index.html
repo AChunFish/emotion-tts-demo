@@ -98,7 +98,7 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 <h1><span class="zh">情緒可控的語音合成：<br>類別、強度，與控制的邊界</span><span class="en">Controllable emotional speech synthesis:<br>category, intensity, and the limits of control</span></h1>
 <p class="lede"><span class="zh">以 CosyVoice 2 為基礎模型，於語言模型輸入端加入情緒類別與連續情緒維度（激發度、支配度、愉悅度）條件，並以條件丟棄與無分類器引導放大條件訊號。</span><span class="en">Built on CosyVoice 2: an emotion-category embedding and continuous emotion dimensions (arousal, dominance, valence) are added at the language-model input, and the conditioning signal is amplified with condition dropout and classifier-free guidance.</span></p>
 <ul class="meta"><li><span class="zh">七類情緒</span><span class="en">Seven emotions</span></li><li><span class="zh">強度以引導係數 w 調整</span><span class="en">Intensity via guidance coefficient w</span></li><li><span class="zh">中文與英文</span><span class="en">Mandarin and English</span></li></ul></header>
-<nav><ol><li><a href="#dissociation"><span class="zh">量化前後的介入</span><span class="en">Before vs. after quantization</span></a></li><li><a href="#steering"><span class="zh">表徵方向注入</span><span class="en">Activation steering</span></a></li><li><a href="#intensity"><span class="zh">強度旋鈕</span><span class="en">Intensity knob</span></a></li><li><a href="#emotions"><span class="zh">七類情緒</span><span class="en">Seven emotions</span></a></li><li><a href="#emoid_w"><span class="zh">只給類別 × 強度</span><span class="en">Category only × intensity</span></a></li><li><a href="#cer"><span class="zh">中文可懂度</span><span class="en">Mandarin intelligibility</span></a></li></ol></nav>
+<nav><ol><li><a href="#dissociation"><span class="zh">量化前後的介入</span><span class="en">Before vs. after quantization</span></a></li><li><a href="#steering"><span class="zh">表徵方向注入</span><span class="en">Activation steering</span></a></li><li><a href="#intensity"><span class="zh">強度旋鈕</span><span class="en">Intensity knob</span></a></li><li><a href="#emotions"><span class="zh">七類情緒</span><span class="en">Seven emotions</span></a></li><li><a href="#emoid_w"><span class="zh">只給類別 × 強度</span><span class="en">Category only × intensity</span></a></li></ol></nav>
 <section id="dissociation">
 <div class="sec-head"><span class="num">1</span><h2><span class="zh">推動分佈，而不是推動 token</span><span class="en">Shift the distribution, not the tokens</span></h2></div>
 <p class="lead"><span class="zh">(a) 推動分佈；(b) 推動 token logits。</span><span class="en">(a) shifts the distribution; (b) pushes token logits.</span></p>
@@ -411,47 +411,6 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 <div class="card">
 <span class="cond"><span class="zh">w = 2</span><span class="en">w = 2</span></span>
 <audio controls preload="none" src="audio/emoid_w_29.mp3"></audio>
-</div>
-</div>
-</section>
-<section id="cer">
-<div class="sec-head"><span class="num">6</span><h2><span class="zh">資料擴充前後的中文可懂度</span><span class="en">Mandarin intelligibility, before and after data expansion</span></h2></div>
-<p class="lead"><span class="zh">擴充前的模型在中文上有明顯的遺忘現象，約四分之一的句子被合成為與文本無關的內容；擴充後幾乎消失。每格附上以 Whisper large-v2 轉寫所得的字元錯誤率與辨識結果。</span><span class="en">Before the expansion the model had clearly forgotten Mandarin: about a quarter of the sentences came out as content unrelated to the input text. Each cell shows the character error rate and the transcript from Whisper large-v2.</span></p>
-<p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>昨天晚上下了好大的雨還打雷。<span class="en gloss"> It rained heavily last night, with thunder.</span></p>
-<ul class="stats"><li><span><span class="zh">平均字元錯誤率</span><span class="en">Mean CER</span></span> 0.32–0.39 → ≤ 0.03</li><li><span><span class="zh">崩壞句數</span><span class="en">Broken sentences</span></span> 31–39 / 135 → 0–1 / 135</li></ul>
-<div class="grid cols-2">
-<p class="rowlab"><span class="zh">憤怒</span><span class="en">Angry</span></p>
-<div class="card">
-<span class="cond"><span class="zh">擴充前（階段二）</span><span class="en">Before (Stage 2)</span></span>
-<audio controls preload="none" src="audio/cer_00.mp3"></audio>
-<p class="note"><span class="zh">字元錯誤率 1.08；辨識為「哎呀有何的事別哀我有褲子要揮」</span><span class="en">CER 1.08; recognised as “哎呀有何的事別哀我有褲子要揮”</span></p>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">擴充後（最終模型）</span><span class="en">After (final model)</span></span>
-<audio controls preload="none" src="audio/cer_01.mp3"></audio>
-<p class="note"><span class="zh">字元錯誤率 0.00；辨識為「昨天晚上下了好大的雨還打雷」</span><span class="en">CER 0.00; recognised as “昨天晚上下了好大的雨還打雷”</span></p>
-</div>
-<p class="rowlab"><span class="zh">快樂</span><span class="en">Happy</span></p>
-<div class="card">
-<span class="cond"><span class="zh">擴充前（階段二）</span><span class="en">Before (Stage 2)</span></span>
-<audio controls preload="none" src="audio/cer_02.mp3"></audio>
-<p class="note"><span class="zh">字元錯誤率 1.54；辨識為「我的媽媽也是看到頭七的缺素頭七的頭七頭七的」</span><span class="en">CER 1.54; recognised as “我的媽媽也是看到頭七的缺素頭七的頭七頭七的”</span></p>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">擴充後（最終模型）</span><span class="en">After (final model)</span></span>
-<audio controls preload="none" src="audio/cer_03.mp3"></audio>
-<p class="note"><span class="zh">字元錯誤率 0.00；辨識為「昨天晚上下了好大的雨還打雷」</span><span class="en">CER 0.00; recognised as “昨天晚上下了好大的雨還打雷”</span></p>
-</div>
-<p class="rowlab"><span class="zh">中性</span><span class="en">Neutral</span></p>
-<div class="card">
-<span class="cond"><span class="zh">擴充前（階段二）</span><span class="en">Before (Stage 2)</span></span>
-<audio controls preload="none" src="audio/cer_04.mp3"></audio>
-<p class="note"><span class="zh">字元錯誤率 1.31；辨識為「我一直在處理一直在撤家裡後的yes」</span><span class="en">CER 1.31; recognised as “我一直在處理一直在撤家裡後的yes”</span></p>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">擴充後（最終模型）</span><span class="en">After (final model)</span></span>
-<audio controls preload="none" src="audio/cer_05.mp3"></audio>
-<p class="note"><span class="zh">字元錯誤率 0.00；辨識為「昨天晚上下了好大的雨還打雷」</span><span class="en">CER 0.00; recognised as “昨天晚上下了好大的雨還打雷”</span></p>
 </div>
 </div>
 </section>
