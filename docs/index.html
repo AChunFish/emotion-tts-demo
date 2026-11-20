@@ -98,7 +98,7 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 <h1><span class="zh">情緒可控的語音合成：<br>類別、強度，與控制的邊界</span><span class="en">Controllable emotional speech synthesis:<br>category, intensity, and the limits of control</span></h1>
 <p class="lede"><span class="zh">以 CosyVoice 2 為基礎模型，於語言模型輸入端加入情緒類別與連續情緒維度（激發度、支配度、愉悅度）條件，並以條件丟棄與無分類器引導放大條件訊號。</span><span class="en">Built on CosyVoice 2: an emotion-category embedding and continuous emotion dimensions (arousal, dominance, valence) are added at the language-model input, and the conditioning signal is amplified with condition dropout and classifier-free guidance.</span></p>
 <ul class="meta"><li><span class="zh">七類情緒</span><span class="en">Seven emotions</span></li><li><span class="zh">強度以引導係數 w 調整</span><span class="en">Intensity via guidance coefficient w</span></li><li><span class="zh">中文與英文</span><span class="en">Mandarin and English</span></li></ul></header>
-<nav><ol><li><a href="#dissociation"><span class="zh">量化前後的介入</span><span class="en">Before vs. after quantization</span></a></li><li><a href="#steering"><span class="zh">表徵方向注入</span><span class="en">Activation steering</span></a></li><li><a href="#intensity"><span class="zh">強度旋鈕</span><span class="en">Intensity knob</span></a></li><li><a href="#emotions"><span class="zh">七類情緒</span><span class="en">Seven emotions</span></a></li><li><a href="#emoid_w"><span class="zh">只給類別 × 強度</span><span class="en">Category only × intensity</span></a></li></ol></nav>
+<nav><ol><li><a href="#dissociation"><span class="zh">量化前後的介入</span><span class="en">Before vs. after quantization</span></a></li><li><a href="#steering"><span class="zh">表徵方向注入</span><span class="en">Activation steering</span></a></li><li><a href="#emoid_w"><span class="zh">只給類別 × 強度</span><span class="en">Category only × intensity</span></a></li><li><a href="#emotions"><span class="zh">七類情緒</span><span class="en">Seven emotions</span></a></li></ol></nav>
 <section id="dissociation">
 <div class="sec-head"><span class="num">1</span><h2><span class="zh">推動分佈，而不是推動 token</span><span class="en">Shift the distribution, not the tokens</span></h2></div>
 <p class="lead"><span class="zh">(a) 推動分佈；(b) 推動 token logits。</span><span class="en">(a) shifts the distribution; (b) pushes token logits.</span></p>
@@ -176,114 +176,8 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 </div>
 </div>
 </section>
-<section id="intensity">
-<div class="sec-head"><span class="num">3</span><h2><span class="zh">強度旋鈕：引導係數 w</span><span class="en">Intensity knob: guidance coefficient w</span></h2></div>
-<p class="lead"><span class="zh">w 為推論時的引導係數，用來放大情緒條件的影響：w=0 即一般的條件式生成，w 越大，模型越往「有情緒條件」與「無情緒條件」之間的差異方向外推。實驗中以 w ≈ 1 表現最佳，再往上雖然聽感更誇張，卻已是分佈外的外插。</span><span class="en">w is the guidance coefficient applied at inference to amplify the emotion condition. w=0 is plain conditional generation; larger w extrapolates further along the direction between the conditioned and unconditioned outputs. In our experiments w ≈ 1 works best: beyond that the effect sounds stronger but is already extrapolation outside the training data.</span></p>
-<p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>他把書放回書架的第二層。<span class="en gloss"> He put the book back on the second shelf.</span></p>
-<div class="grid cols-3">
-<p class="rowlab"><span class="zh">憤怒</span><span class="en">Angry</span></p>
-<div class="card">
-<span class="cond"><span class="zh">w = 0</span><span class="en">w = 0</span></span>
-<audio controls preload="none" src="audio/intensity_00.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 1</span><span class="en">w = 1</span></span>
-<audio controls preload="none" src="audio/intensity_01.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 2</span><span class="en">w = 2</span></span>
-<audio controls preload="none" src="audio/intensity_02.mp3"></audio>
-</div>
-<p class="rowlab"><span class="zh">快樂</span><span class="en">Happy</span></p>
-<div class="card">
-<span class="cond"><span class="zh">w = 0</span><span class="en">w = 0</span></span>
-<audio controls preload="none" src="audio/intensity_03.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 1</span><span class="en">w = 1</span></span>
-<audio controls preload="none" src="audio/intensity_04.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 2</span><span class="en">w = 2</span></span>
-<audio controls preload="none" src="audio/intensity_05.mp3"></audio>
-</div>
-<p class="rowlab"><span class="zh">悲傷</span><span class="en">Sad</span></p>
-<div class="card">
-<span class="cond"><span class="zh">w = 0</span><span class="en">w = 0</span></span>
-<audio controls preload="none" src="audio/intensity_06.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 1</span><span class="en">w = 1</span></span>
-<audio controls preload="none" src="audio/intensity_07.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 2</span><span class="en">w = 2</span></span>
-<audio controls preload="none" src="audio/intensity_08.mp3"></audio>
-</div>
-<p class="rowlab"><span class="zh">恐懼</span><span class="en">Fear</span></p>
-<div class="card">
-<span class="cond"><span class="zh">w = 0</span><span class="en">w = 0</span></span>
-<audio controls preload="none" src="audio/intensity_09.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 1</span><span class="en">w = 1</span></span>
-<audio controls preload="none" src="audio/intensity_10.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 2</span><span class="en">w = 2</span></span>
-<audio controls preload="none" src="audio/intensity_11.mp3"></audio>
-</div>
-<p class="rowlab"><span class="zh">厭惡</span><span class="en">Disgust</span></p>
-<div class="card">
-<span class="cond"><span class="zh">w = 0</span><span class="en">w = 0</span></span>
-<audio controls preload="none" src="audio/intensity_12.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 1</span><span class="en">w = 1</span></span>
-<audio controls preload="none" src="audio/intensity_13.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">w = 2</span><span class="en">w = 2</span></span>
-<audio controls preload="none" src="audio/intensity_14.mp3"></audio>
-</div>
-</div>
-</section>
-<section id="emotions">
-<div class="sec-head"><span class="num">4</span><h2><span class="zh">七類情緒</span><span class="en">Seven emotions</span></h2></div>
-<p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>他把書放回書架的第二層。<span class="en gloss"> He put the book back on the second shelf.</span></p>
-<div class="grid cols-3">
-<div class="card">
-<span class="cond"><span class="zh">中性</span><span class="en">Neutral</span></span>
-<audio controls preload="none" src="audio/emotions_00.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">快樂</span><span class="en">Happy</span></span>
-<audio controls preload="none" src="audio/emotions_01.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">悲傷</span><span class="en">Sad</span></span>
-<audio controls preload="none" src="audio/emotions_02.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">憤怒</span><span class="en">Angry</span></span>
-<audio controls preload="none" src="audio/emotions_03.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">驚訝</span><span class="en">Surprise</span></span>
-<audio controls preload="none" src="audio/emotions_04.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">恐懼</span><span class="en">Fear</span></span>
-<audio controls preload="none" src="audio/emotions_05.mp3"></audio>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">厭惡</span><span class="en">Disgust</span></span>
-<audio controls preload="none" src="audio/emotions_06.mp3"></audio>
-</div>
-</div>
-</section>
 <section id="emoid_w">
-<div class="sec-head"><span class="num">5</span><h2><span class="zh">只給情緒類別時的強度旋鈕</span><span class="en">The intensity knob with the category alone</span></h2></div>
+<div class="sec-head"><span class="num">3</span><h2><span class="zh">只給情緒類別時的強度旋鈕</span><span class="en">The intensity knob with the category alone</span></h2></div>
 <div class="inputs"><b><span class="zh">輸入</span><span class="en">Input</span></b><dl><dt><span class="zh">文本</span><span class="en">Text</span></dt><dd>昨天晚上天空中出現了一朵形狀特殊的雲。</dd><dt><span class="zh">emo id</span><span class="en">emo id</span></dt><dd>happy / sad / angry / surprise / fear / disgust</dd><dt><span class="zh">adv</span><span class="en">adv</span></dt><dd>null</dd></dl></div>
 <div class="grid cols-5">
 <p class="rowlab"><span class="zh">快樂</span><span class="en">Happy</span></p>
@@ -411,6 +305,40 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 <div class="card">
 <span class="cond"><span class="zh">w = 2</span><span class="en">w = 2</span></span>
 <audio controls preload="none" src="audio/emoid_w_29.mp3"></audio>
+</div>
+</div>
+</section>
+<section id="emotions">
+<div class="sec-head"><span class="num">4</span><h2><span class="zh">七類情緒</span><span class="en">Seven emotions</span></h2></div>
+<p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>他把書放回書架的第二層。<span class="en gloss"> He put the book back on the second shelf.</span></p>
+<div class="grid cols-3">
+<div class="card">
+<span class="cond"><span class="zh">中性</span><span class="en">Neutral</span></span>
+<audio controls preload="none" src="audio/emotions_00.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">快樂</span><span class="en">Happy</span></span>
+<audio controls preload="none" src="audio/emotions_01.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">悲傷</span><span class="en">Sad</span></span>
+<audio controls preload="none" src="audio/emotions_02.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">憤怒</span><span class="en">Angry</span></span>
+<audio controls preload="none" src="audio/emotions_03.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">驚訝</span><span class="en">Surprise</span></span>
+<audio controls preload="none" src="audio/emotions_04.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">恐懼</span><span class="en">Fear</span></span>
+<audio controls preload="none" src="audio/emotions_05.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">厭惡</span><span class="en">Disgust</span></span>
+<audio controls preload="none" src="audio/emotions_06.mp3"></audio>
 </div>
 </div>
 </section>
