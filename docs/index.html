@@ -98,43 +98,86 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 <h1><span class="zh">情緒可控的語音合成：<br>類別、強度，與控制的邊界</span><span class="en">Controllable emotional speech synthesis:<br>category, intensity, and the limits of control</span></h1>
 <p class="lede"><span class="zh">以 CosyVoice 2 為基礎模型，於語言模型輸入端加入情緒類別與連續情緒維度（激發度、支配度、愉悅度）條件，並以條件丟棄與無分類器引導放大條件訊號。</span><span class="en">Built on CosyVoice 2: an emotion-category embedding and continuous emotion dimensions (arousal, dominance, valence) are added at the language-model input, and the conditioning signal is amplified with condition dropout and classifier-free guidance.</span></p>
 <ul class="meta"><li><span class="zh">七類情緒</span><span class="en">Seven emotions</span></li><li><span class="zh">強度以引導係數 w 調整</span><span class="en">Intensity via guidance coefficient w</span></li><li><span class="zh">中文與英文</span><span class="en">Mandarin and English</span></li></ul></header>
-<nav><ol><li><a href="#emotions"><span class="zh">七類情緒</span><span class="en">Seven emotions</span></a></li><li><a href="#intensity"><span class="zh">強度旋鈕</span><span class="en">Intensity knob</span></a></li><li><a href="#emoid_w"><span class="zh">只給類別 × 強度</span><span class="en">Category only × intensity</span></a></li><li><a href="#cer"><span class="zh">中文可懂度</span><span class="en">Mandarin intelligibility</span></a></li><li><a href="#steering"><span class="zh">表徵方向注入</span><span class="en">Activation steering</span></a></li></ol></nav>
-<section id="emotions">
-<div class="sec-head"><span class="num">1</span><h2><span class="zh">七類情緒</span><span class="en">Seven emotions</span></h2></div>
-<p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>他把書放回書架的第二層。<span class="en gloss"> He put the book back on the second shelf.</span></p>
+<nav><ol><li><a href="#dissociation"><span class="zh">量化前後的介入</span><span class="en">Before vs. after quantization</span></a></li><li><a href="#steering"><span class="zh">表徵方向注入</span><span class="en">Activation steering</span></a></li><li><a href="#intensity"><span class="zh">強度旋鈕</span><span class="en">Intensity knob</span></a></li><li><a href="#emotions"><span class="zh">七類情緒</span><span class="en">Seven emotions</span></a></li><li><a href="#emoid_w"><span class="zh">只給類別 × 強度</span><span class="en">Category only × intensity</span></a></li><li><a href="#cer"><span class="zh">中文可懂度</span><span class="en">Mandarin intelligibility</span></a></li></ol></nav>
+<section id="dissociation">
+<div class="sec-head"><span class="num">1</span><h2><span class="zh">推動分佈，而不是推動 token</span><span class="en">Shift the distribution, not the tokens</span></h2></div>
+<p class="lead"><span class="zh">兩列皆在未微調的原始 CosyVoice 2 上進行，不更新任何權重，唯一差別在於作用於量化之前或之後。(a) 於語言模型第 16 層的隱藏狀態加上 α 倍的激發度方向：情緒隨 α 單調變化，且字字清楚。(b) 對與高／低激發度最相關的 token 的輸出分數加減 β：激發度不隨 β 變化，強度高時反而破壞語音（β = +4 時句子在中途中斷，其後的靜音為模型未正常結束所致）。α 與 β 單位不同，數值不可直接比較；β = ±4 為論文 Table 3 的最強設定。20 句平均：(a) 激發度範圍 0.128、WER ≈ 0；(b) 範圍 0.018、β = ±4 時 WER 0.21。</span><span class="en">Both rows use the original CosyVoice 2 with no weights updated; they differ only in acting before or after quantization. (a) An arousal direction, scaled by α, is added to the layer-16 hidden state: arousal follows α monotonically and every word stays intelligible. (b) ±β is added to the logits of the tokens most associated with high / low arousal: arousal does not follow β, and at high strength the utterance breaks (at β = +4 the sentence stops halfway; the trailing silence is the model failing to stop). α and β are in different units and are not comparable by value; β = ±4 is the strongest setting in Table 3 of the paper. Averages over 20 sentences: (a) arousal range 0.128, WER ≈ 0; (b) range 0.018, WER 0.21 at β = ±4.</span></p>
+<p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>The children lined up quietly outside the classroom.</p>
 <div class="grid cols-3">
+<p class="rowlab"><span class="zh">(a) 量化前：注入隱藏狀態</span><span class="en">(a) Before quantization: hidden state</span></p>
 <div class="card">
-<span class="cond"><span class="zh">中性</span><span class="en">Neutral</span></span>
-<audio controls preload="none" src="audio/emotions_00.mp3"></audio>
+<span class="cond"><span class="zh">低</span><span class="en">Low</span></span>
+<audio controls preload="none" src="audio/dissociation_00.mp3"></audio>
+<p class="note"><span class="zh">α = −2；預測激發度 0.357；WER 0.00</span><span class="en">α = −2; predicted arousal 0.357; WER 0.00</span></p>
 </div>
 <div class="card">
-<span class="cond"><span class="zh">快樂</span><span class="en">Happy</span></span>
-<audio controls preload="none" src="audio/emotions_01.mp3"></audio>
+<span class="cond"><span class="zh">0（未介入）</span><span class="en">0 (no intervention)</span></span>
+<audio controls preload="none" src="audio/dissociation_01.mp3"></audio>
+<p class="note"><span class="zh">α = 0；預測激發度 0.393；WER 0.00</span><span class="en">α = 0; predicted arousal 0.393; WER 0.00</span></p>
 </div>
 <div class="card">
-<span class="cond"><span class="zh">悲傷</span><span class="en">Sad</span></span>
-<audio controls preload="none" src="audio/emotions_02.mp3"></audio>
+<span class="cond"><span class="zh">高</span><span class="en">High</span></span>
+<audio controls preload="none" src="audio/dissociation_02.mp3"></audio>
+<p class="note"><span class="zh">α = +2；預測激發度 0.463；WER 0.00</span><span class="en">α = +2; predicted arousal 0.463; WER 0.00</span></p>
+</div>
+<p class="rowlab"><span class="zh">(b) 量化後：推 token logits</span><span class="en">(b) After quantization: token logits</span></p>
+<div class="card">
+<span class="cond"><span class="zh">低</span><span class="en">Low</span></span>
+<audio controls preload="none" src="audio/dissociation_03.mp3"></audio>
+<p class="note"><span class="zh">β = −4；預測激發度 0.418；WER 0.00</span><span class="en">β = −4; predicted arousal 0.418; WER 0.00</span></p>
 </div>
 <div class="card">
-<span class="cond"><span class="zh">憤怒</span><span class="en">Angry</span></span>
-<audio controls preload="none" src="audio/emotions_03.mp3"></audio>
+<span class="cond"><span class="zh">0（未介入）</span><span class="en">0 (no intervention)</span></span>
+<audio controls preload="none" src="audio/dissociation_04.mp3"></audio>
+<p class="note"><span class="zh">β = 0；預測激發度 0.393；WER 0.00</span><span class="en">β = 0; predicted arousal 0.393; WER 0.00</span></p>
 </div>
 <div class="card">
-<span class="cond"><span class="zh">驚訝</span><span class="en">Surprise</span></span>
-<audio controls preload="none" src="audio/emotions_04.mp3"></audio>
+<span class="cond"><span class="zh">高</span><span class="en">High</span></span>
+<audio controls preload="none" src="audio/dissociation_05.mp3"></audio>
+<p class="note"><span class="zh">β = +4；預測激發度 0.375；WER 0.43</span><span class="en">β = +4; predicted arousal 0.375; WER 0.43</span></p>
+</div>
+</div>
+</section>
+<section id="steering">
+<div class="sec-head"><span class="num">2</span><h2><span class="zh">未微調模型上的表徵方向注入</span><span class="en">Activation steering on the un-fine-tuned model</span></h2></div>
+<p class="lead"><span class="zh">不更新任何權重，於語言模型第 16 層的連續表徵加上一個激發度方向，強度為 α。此為分析章節所用的聽測刺激。</span><span class="en">No weights are updated: an arousal direction, scaled by α, is added to the continuous representation at layer 16 of the language model. These are the listening-test stimuli used in the analysis chapter.</span></p>
+<div class="grid cols-3">
+<p class="rowlab"><span class="zh">英文</span><span class="en">English</span><span class="t">The library added several new titles to its shelves.</span></p>
+<div class="card">
+<span class="cond"><span class="zh">α 最低</span><span class="en">α lowest</span></span>
+<audio controls preload="none" src="audio/steering_00.mp3"></audio>
+<p class="note"><span class="zh">注入強度 α = -2；預測激發度 0.397</span><span class="en">Injection strength α = -2; predicted arousal 0.397</span></p>
 </div>
 <div class="card">
-<span class="cond"><span class="zh">恐懼</span><span class="en">Fear</span></span>
-<audio controls preload="none" src="audio/emotions_05.mp3"></audio>
+<span class="cond"><span class="zh">α = 0（原始）</span><span class="en">α = 0 (unmodified)</span></span>
+<audio controls preload="none" src="audio/steering_01.mp3"></audio>
+<p class="note"><span class="zh">注入強度 α = +0；預測激發度 0.459</span><span class="en">Injection strength α = +0; predicted arousal 0.459</span></p>
 </div>
 <div class="card">
-<span class="cond"><span class="zh">厭惡</span><span class="en">Disgust</span></span>
-<audio controls preload="none" src="audio/emotions_06.mp3"></audio>
+<span class="cond"><span class="zh">α 最高</span><span class="en">α highest</span></span>
+<audio controls preload="none" src="audio/steering_02.mp3"></audio>
+<p class="note"><span class="zh">注入強度 α = +2；預測激發度 0.490</span><span class="en">Injection strength α = +2; predicted arousal 0.490</span></p>
+</div>
+<p class="rowlab"><span class="zh">中文</span><span class="en">Mandarin</span><span class="t">今天的天氣有點潮溼但還算溫暖<span class="en gloss"> Today&#x27;s weather is a little humid but still fairly warm.</span></span></p>
+<div class="card">
+<span class="cond"><span class="zh">α 最低</span><span class="en">α lowest</span></span>
+<audio controls preload="none" src="audio/steering_03.mp3"></audio>
+<p class="note"><span class="zh">注入強度 α = -3；預測激發度 0.218</span><span class="en">Injection strength α = -3; predicted arousal 0.218</span></p>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">α = 0（原始）</span><span class="en">α = 0 (unmodified)</span></span>
+<audio controls preload="none" src="audio/steering_04.mp3"></audio>
+<p class="note"><span class="zh">注入強度 α = +0；預測激發度 0.450</span><span class="en">Injection strength α = +0; predicted arousal 0.450</span></p>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">α 最高</span><span class="en">α highest</span></span>
+<audio controls preload="none" src="audio/steering_05.mp3"></audio>
+<p class="note"><span class="zh">注入強度 α = +3；預測激發度 0.579</span><span class="en">Injection strength α = +3; predicted arousal 0.579</span></p>
 </div>
 </div>
 </section>
 <section id="intensity">
-<div class="sec-head"><span class="num">2</span><h2><span class="zh">強度旋鈕：引導係數 w</span><span class="en">Intensity knob: guidance coefficient w</span></h2></div>
+<div class="sec-head"><span class="num">3</span><h2><span class="zh">強度旋鈕：引導係數 w</span><span class="en">Intensity knob: guidance coefficient w</span></h2></div>
 <p class="lead"><span class="zh">w 為推論時的引導係數，用來放大情緒條件的影響：w=0 即一般的條件式生成，w 越大，模型越往「有情緒條件」與「無情緒條件」之間的差異方向外推。實驗中以 w ≈ 1 表現最佳，再往上雖然聽感更誇張，卻已是分佈外的外插。</span><span class="en">w is the guidance coefficient applied at inference to amplify the emotion condition. w=0 is plain conditional generation; larger w extrapolates further along the direction between the conditioned and unconditioned outputs. In our experiments w ≈ 1 works best: beyond that the effect sounds stronger but is already extrapolation outside the training data.</span></p>
 <p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>他把書放回書架的第二層。<span class="en gloss"> He put the book back on the second shelf.</span></p>
 <div class="grid cols-3">
@@ -205,8 +248,42 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 </div>
 </div>
 </section>
+<section id="emotions">
+<div class="sec-head"><span class="num">4</span><h2><span class="zh">七類情緒</span><span class="en">Seven emotions</span></h2></div>
+<p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>他把書放回書架的第二層。<span class="en gloss"> He put the book back on the second shelf.</span></p>
+<div class="grid cols-3">
+<div class="card">
+<span class="cond"><span class="zh">中性</span><span class="en">Neutral</span></span>
+<audio controls preload="none" src="audio/emotions_00.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">快樂</span><span class="en">Happy</span></span>
+<audio controls preload="none" src="audio/emotions_01.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">悲傷</span><span class="en">Sad</span></span>
+<audio controls preload="none" src="audio/emotions_02.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">憤怒</span><span class="en">Angry</span></span>
+<audio controls preload="none" src="audio/emotions_03.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">驚訝</span><span class="en">Surprise</span></span>
+<audio controls preload="none" src="audio/emotions_04.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">恐懼</span><span class="en">Fear</span></span>
+<audio controls preload="none" src="audio/emotions_05.mp3"></audio>
+</div>
+<div class="card">
+<span class="cond"><span class="zh">厭惡</span><span class="en">Disgust</span></span>
+<audio controls preload="none" src="audio/emotions_06.mp3"></audio>
+</div>
+</div>
+</section>
 <section id="emoid_w">
-<div class="sec-head"><span class="num">3</span><h2><span class="zh">只給情緒類別時的強度旋鈕</span><span class="en">The intensity knob with the category alone</span></h2></div>
+<div class="sec-head"><span class="num">5</span><h2><span class="zh">只給情緒類別時的強度旋鈕</span><span class="en">The intensity knob with the category alone</span></h2></div>
 <div class="inputs"><b><span class="zh">輸入</span><span class="en">Input</span></b><dl><dt><span class="zh">文本</span><span class="en">Text</span></dt><dd>昨天晚上天空中出現了一朵形狀特殊的雲。</dd><dt><span class="zh">emo id</span><span class="en">emo id</span></dt><dd>happy / sad / angry / surprise / fear / disgust</dd><dt><span class="zh">adv</span><span class="en">adv</span></dt><dd>null</dd></dl></div>
 <div class="grid cols-5">
 <p class="rowlab"><span class="zh">快樂</span><span class="en">Happy</span></p>
@@ -338,7 +415,7 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 </div>
 </section>
 <section id="cer">
-<div class="sec-head"><span class="num">4</span><h2><span class="zh">資料擴充前後的中文可懂度</span><span class="en">Mandarin intelligibility, before and after data expansion</span></h2></div>
+<div class="sec-head"><span class="num">6</span><h2><span class="zh">資料擴充前後的中文可懂度</span><span class="en">Mandarin intelligibility, before and after data expansion</span></h2></div>
 <p class="lead"><span class="zh">擴充前的模型在中文上有明顯的遺忘現象，約四分之一的句子被合成為與文本無關的內容；擴充後幾乎消失。每格附上以 Whisper large-v2 轉寫所得的字元錯誤率與辨識結果。</span><span class="en">Before the expansion the model had clearly forgotten Mandarin: about a quarter of the sentences came out as content unrelated to the input text. Each cell shows the character error rate and the transcript from Whisper large-v2.</span></p>
 <p class="shared-text"><b><span class="zh">文本</span><span class="en">Text</span></b>昨天晚上下了好大的雨還打雷。<span class="en gloss"> It rained heavily last night, with thunder.</span></p>
 <ul class="stats"><li><span><span class="zh">平均字元錯誤率</span><span class="en">Mean CER</span></span> 0.32–0.39 → ≤ 0.03</li><li><span><span class="zh">崩壞句數</span><span class="en">Broken sentences</span></span> 31–39 / 135 → 0–1 / 135</li></ul>
@@ -375,44 +452,6 @@ a:focus-visible,audio:focus-visible,button:focus-visible{outline:2px solid var(-
 <span class="cond"><span class="zh">擴充後（最終模型）</span><span class="en">After (final model)</span></span>
 <audio controls preload="none" src="audio/cer_05.mp3"></audio>
 <p class="note"><span class="zh">字元錯誤率 0.00；辨識為「昨天晚上下了好大的雨還打雷」</span><span class="en">CER 0.00; recognised as “昨天晚上下了好大的雨還打雷”</span></p>
-</div>
-</div>
-</section>
-<section id="steering">
-<div class="sec-head"><span class="num">5</span><h2><span class="zh">未微調模型上的表徵方向注入</span><span class="en">Activation steering on the un-fine-tuned model</span></h2></div>
-<p class="lead"><span class="zh">不更新任何權重，於語言模型第 16 層的連續表徵加上一個激發度方向，強度為 α。此為分析章節所用的聽測刺激。</span><span class="en">No weights are updated: an arousal direction, scaled by α, is added to the continuous representation at layer 16 of the language model. These are the listening-test stimuli used in the analysis chapter.</span></p>
-<div class="grid cols-3">
-<p class="rowlab"><span class="zh">英文</span><span class="en">English</span><span class="t">The library added several new titles to its shelves.</span></p>
-<div class="card">
-<span class="cond"><span class="zh">α 最低</span><span class="en">α lowest</span></span>
-<audio controls preload="none" src="audio/steering_00.mp3"></audio>
-<p class="note"><span class="zh">注入強度 α = -2；預測激發度 0.397</span><span class="en">Injection strength α = -2; predicted arousal 0.397</span></p>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">α = 0（原始）</span><span class="en">α = 0 (unmodified)</span></span>
-<audio controls preload="none" src="audio/steering_01.mp3"></audio>
-<p class="note"><span class="zh">注入強度 α = +0；預測激發度 0.459</span><span class="en">Injection strength α = +0; predicted arousal 0.459</span></p>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">α 最高</span><span class="en">α highest</span></span>
-<audio controls preload="none" src="audio/steering_02.mp3"></audio>
-<p class="note"><span class="zh">注入強度 α = +2；預測激發度 0.490</span><span class="en">Injection strength α = +2; predicted arousal 0.490</span></p>
-</div>
-<p class="rowlab"><span class="zh">中文</span><span class="en">Mandarin</span><span class="t">今天的天氣有點潮溼但還算溫暖<span class="en gloss"> Today&#x27;s weather is a little humid but still fairly warm.</span></span></p>
-<div class="card">
-<span class="cond"><span class="zh">α 最低</span><span class="en">α lowest</span></span>
-<audio controls preload="none" src="audio/steering_03.mp3"></audio>
-<p class="note"><span class="zh">注入強度 α = -3；預測激發度 0.218</span><span class="en">Injection strength α = -3; predicted arousal 0.218</span></p>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">α = 0（原始）</span><span class="en">α = 0 (unmodified)</span></span>
-<audio controls preload="none" src="audio/steering_04.mp3"></audio>
-<p class="note"><span class="zh">注入強度 α = +0；預測激發度 0.450</span><span class="en">Injection strength α = +0; predicted arousal 0.450</span></p>
-</div>
-<div class="card">
-<span class="cond"><span class="zh">α 最高</span><span class="en">α highest</span></span>
-<audio controls preload="none" src="audio/steering_05.mp3"></audio>
-<p class="note"><span class="zh">注入強度 α = +3；預測激發度 0.579</span><span class="en">Injection strength α = +3; predicted arousal 0.579</span></p>
 </div>
 </div>
 </section>
